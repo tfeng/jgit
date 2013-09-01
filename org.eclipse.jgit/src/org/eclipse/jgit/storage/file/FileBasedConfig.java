@@ -125,6 +125,10 @@ public class FileBasedConfig extends StoredConfig {
 		return configFile;
 	}
 
+	protected byte[] readFully() throws IOException {
+		return IO.readFully(getFile());
+	}
+
 	/**
 	 * Load the configuration as a Git text style configuration file.
 	 * <p>
@@ -141,7 +145,7 @@ public class FileBasedConfig extends StoredConfig {
 		final FileSnapshot oldSnapshot = snapshot;
 		final FileSnapshot newSnapshot = FileSnapshot.save(getFile());
 		try {
-			final byte[] in = IO.readFully(getFile());
+			final byte[] in = readFully();
 			final ObjectId newHash = hash(in);
 			if (hash.equals(newHash)) {
 				if (oldSnapshot.equals(newSnapshot))

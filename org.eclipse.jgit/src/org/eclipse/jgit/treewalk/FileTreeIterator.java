@@ -135,6 +135,8 @@ public class FileTreeIterator extends WorkingTreeIterator {
 	}
 
 	private Entry[] entries() {
+		if (directory == null)
+			return EOF;
 		final File[] all = directory.listFiles();
 		if (all == null)
 			return EOF;

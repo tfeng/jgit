@@ -336,6 +336,10 @@ public class DirCache {
 	/** Repository containing this index */
 	private Repository repository;
 
+	public void setRepository(Repository repository) {
+		this.repository = repository;
+	}
+
 	/**
 	 * Create a new in-core index representation.
 	 * <p>
@@ -445,7 +449,11 @@ public class DirCache {
 		readIndexChecksum = NO_CHECKSUM;
 	}
 
-	private void readFrom(final InputStream inStream) throws IOException,
+	protected long getLastModified() {
+		return FileSnapshot.save(liveFile).lastModified();
+	}
+
+	protected void readFrom(final InputStream inStream) throws IOException,
 			CorruptObjectException {
 		final BufferedInputStream in = new BufferedInputStream(inStream);
 		final MessageDigest md = Constants.newMessageDigest();
@@ -468,9 +476,9 @@ public class DirCache {
 		if (entryCnt < 0)
 			throw new CorruptObjectException(JGitText.get().DIRCHasTooManyEntries);
 
-		snapshot = FileSnapshot.save(liveFile);
-		int smudge_s = (int) (snapshot.lastModified() / 1000);
-		int smudge_ns = ((int) (snapshot.lastModified() % 1000)) * 1000000;
+		long lastModified = getLastModified();
+		int smudge_s = (int) (lastModified / 1000);
+		int smudge_ns = ((int) (lastModified % 1000)) * 1000000;
 
 		// Load the individual file entries.
 		//
@@ -620,7 +628,7 @@ public class DirCache {
 		}
 	}
 
-	void writeTo(final OutputStream os) throws IOException {
+	protected void writeTo(final OutputStream os) throws IOException {
 		final MessageDigest foot = Constants.newMessageDigest();
 		final DigestOutputStream dos = new DigestOutputStream(os, foot);
 

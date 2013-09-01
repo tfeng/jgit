@@ -107,6 +107,10 @@ public class DirCacheCheckout {
 
 	private ArrayList<String> toBeDeleted = new ArrayList<String>();
 
+	public DirCacheBuilder getBuilder() {
+		return builder;
+	}
+
 	/**
 	 * @return a list of updated paths and objectIds
 	 */
@@ -394,13 +398,18 @@ public class DirCacheCheckout {
 		}
 	}
 
-	private boolean doCheckout() throws CorruptObjectException, IOException,
+	protected boolean doCheckout() throws CorruptObjectException, IOException,
+			MissingObjectException, IncorrectObjectTypeException,
+			CheckoutConflictException, IndexWriteException {
+		initCheckout();
+		return checkoutEntries();
+	}
+
+	protected void initCheckout() throws CorruptObjectException, IOException,
 			MissingObjectException, IncorrectObjectTypeException,
 			CheckoutConflictException, IndexWriteException {
 		toBeDeleted.clear();
 
-		ObjectReader objectReader = repo.getObjectDatabase().newReader();
-		try {
 			if (headCommitTree != null)
 				preScanTwoTrees();
 			else
@@ -440,10 +449,16 @@ public class DirCacheCheckout {
 			}
 			if (file != null)
 				removeEmptyParents(file);
+	}
 
+	protected boolean checkoutEntries() throws CorruptObjectException, IOException,
+			MissingObjectException, IncorrectObjectTypeException,
+			CheckoutConflictException, IndexWriteException {
+		ObjectReader objectReader = repo.getObjectDatabase().newReader();
+		try {
 			for (String path : updated.keySet()) {
 				// ... create/overwrite this file ...
-				file = new File(repo.getWorkTree(), path);
+				File file = new File(repo.getWorkTree(), path);
 				if (!file.getParentFile().mkdirs()) {
 					// ignore
 				}

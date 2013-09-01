@@ -134,7 +134,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		}
 	}
 
-	private Repository init(URIish u) throws GitAPIException {
+	protected Repository init(URIish u) throws GitAPIException {
 		InitCommand command = Git.init();
 		command.setBare(bare);
 		if (directory == null)
@@ -194,7 +194,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		return specs;
 	}
 
-	private void checkout(Repository clonedRepo, FetchResult result)
+	protected void checkout(Repository clonedRepo, FetchResult result)
 			throws MissingObjectException, IncorrectObjectTypeException,
 			IOException, GitAPIException {
 
@@ -230,16 +230,22 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		u.forceUpdate();
 
 		if (!bare) {
+			doCheckout(clonedRepo, commit);
+		}
+	}
+
+	protected void doCheckout(Repository clonedRepo, RevCommit commit)
+			throws MissingObjectException, IncorrectObjectTypeException,
+			IOException, GitAPIException {
 			DirCache dc = clonedRepo.lockDirCache();
 			DirCacheCheckout co = new DirCacheCheckout(clonedRepo, dc,
 					commit.getTree());
 			co.checkout();
 			if (cloneSubmodules)
 				cloneSubmodules(clonedRepo);
-		}
 	}
 
-	private void cloneSubmodules(Repository clonedRepo) throws IOException,
+	protected void cloneSubmodules(Repository clonedRepo) throws IOException,
 			GitAPIException {
 		SubmoduleInitCommand init = new SubmoduleInitCommand(clonedRepo);
 		if (init.call().isEmpty())
