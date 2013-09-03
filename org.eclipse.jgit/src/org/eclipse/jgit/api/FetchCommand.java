@@ -73,21 +73,21 @@ import org.eclipse.jgit.transport.Transport;
  */
 public class FetchCommand extends TransportCommand<FetchCommand, FetchResult> {
 
-	private String remote = Constants.DEFAULT_REMOTE_NAME;
+	protected String remote = Constants.DEFAULT_REMOTE_NAME;
 
-	private List<RefSpec> refSpecs;
+	protected List<RefSpec> refSpecs;
 
-	private ProgressMonitor monitor = NullProgressMonitor.INSTANCE;
+	protected ProgressMonitor monitor = NullProgressMonitor.INSTANCE;
 
-	private boolean checkFetchedObjects;
+	protected boolean checkFetchedObjects;
 
-	private boolean removeDeletedRefs;
+	protected boolean removeDeletedRefs;
 
-	private boolean dryRun;
+	protected boolean dryRun;
 
-	private boolean thin = Transport.DEFAULT_FETCH_THIN;
+	protected boolean thin = Transport.DEFAULT_FETCH_THIN;
 
-	private TagOpt tagOption;
+	protected TagOpt tagOption;
 
 	/**
 	 * @param repo

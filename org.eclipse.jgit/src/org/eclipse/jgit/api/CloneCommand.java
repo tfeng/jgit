@@ -82,25 +82,25 @@ import org.eclipse.jgit.transport.URIish;
  */
 public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 
-	private String uri;
+	protected String uri;
 
-	private File directory;
+	protected File directory;
 
-	private boolean bare;
+	protected boolean bare;
 
-	private String remote = Constants.DEFAULT_REMOTE_NAME;
+	protected String remote = Constants.DEFAULT_REMOTE_NAME;
 
-	private String branch = Constants.HEAD;
+	protected String branch = Constants.HEAD;
 
-	private ProgressMonitor monitor = NullProgressMonitor.INSTANCE;
+	protected ProgressMonitor monitor = NullProgressMonitor.INSTANCE;
 
-	private boolean cloneAllBranches;
+	protected boolean cloneAllBranches;
 
-	private boolean cloneSubmodules;
+	protected boolean cloneSubmodules;
 
-	private boolean noCheckout;
+	protected boolean noCheckout;
 
-	private Collection<String> branchesToClone;
+	protected Collection<String> branchesToClone;
 
 	/**
 	 * Create clone command with no repository set
@@ -146,7 +146,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		return command.call().getRepository();
 	}
 
-	private FetchResult fetch(Repository clonedRepo, URIish u)
+	protected FetchResult fetch(Repository clonedRepo, URIish u)
 			throws URISyntaxException,
 			org.eclipse.jgit.api.errors.TransportException, IOException,
 			GitAPIException {
@@ -178,7 +178,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		return command.call();
 	}
 
-	private List<RefSpec> calculateRefSpecs(final String dst) {
+	protected List<RefSpec> calculateRefSpecs(final String dst) {
 		RefSpec wcrs = new RefSpec();
 		wcrs = wcrs.setForceUpdate(true);
 		wcrs = wcrs.setSourceDestination(Constants.R_HEADS + "*", dst); //$NON-NLS-1$
@@ -269,7 +269,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		}
 	}
 
-	private Ref findBranchToCheckout(FetchResult result) {
+	protected Ref findBranchToCheckout(FetchResult result) {
 		final Ref idHEAD = result.getAdvertisedRef(Constants.HEAD);
 		if (idHEAD == null)
 			return null;
@@ -292,7 +292,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		return foundBranch;
 	}
 
-	private void addMergeConfig(Repository clonedRepo, Ref head)
+	protected void addMergeConfig(Repository clonedRepo, Ref head)
 			throws IOException {
 		String branchName = Repository.shortenRefName(head.getName());
 		clonedRepo.getConfig().setString(ConfigConstants.CONFIG_BRANCH_SECTION,
@@ -310,7 +310,7 @@ public class CloneCommand extends TransportCommand<CloneCommand, Git> {
 		clonedRepo.getConfig().save();
 	}
 
-	private RevCommit parseCommit(final Repository clonedRepo, final Ref ref)
+	protected RevCommit parseCommit(final Repository clonedRepo, final Ref ref)
 			throws MissingObjectException, IncorrectObjectTypeException,
 			IOException {
 		final RevWalk rw = new RevWalk(clonedRepo);
