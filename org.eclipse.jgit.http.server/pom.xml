@@ -52,7 +52,7 @@
   <parent>
     <groupId>com.bacoder.jgit</groupId>
     <artifactId>org.eclipse.jgit-parent</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.1.0-201309071158-r</version>
   </parent>
 
   <artifactId>org.eclipse.jgit.http.server</artifactId>
